@@ -2,12 +2,19 @@ package com.libjap.springboot;
 
 import com.libjap.springboot.domain.Customer;
 import com.libjap.springboot.domain.CustomerRepository;
+import com.libjap.springboot.domain.Member;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
+import java.util.List;
 
 /**
  * Created by coupang on 15. 10. 13..
@@ -54,5 +61,57 @@ public class Application implements CommandLineRunner {
 		for (Customer bauer : repository.findByLastName("Bauer")) {
 			System.out.println(bauer);
 		}
+		homework1();
+	}
+
+	public void homework1() {
+		//[엔티티 매니저 팩토리] - 생성
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("jpabook");
+
+		//
+		EntityManager em = emf.createEntityManager();
+
+		//
+		EntityTransaction tx = em.getTransaction();
+
+		try {
+			tx.begin();
+			logic(em);
+			tx.commit();
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			tx.rollback();
+		} finally {
+			em.close();
+		}
+		emf.close();
+
+	}
+
+	public static void logic(EntityManager em) {
+
+		String id = "id";
+		Member member = new Member();
+		member.setId(id);
+		member.setUsername("지한");
+		member.setAge(2);
+
+		//등록
+		em.persist(member);
+
+		//수정
+		member.setAge(20);
+
+		//한건 조회
+		Member findMember = em.find(Member.class, id);
+		System.out.printf("findMember=%s, age=%s\n",findMember.getUsername(),findMember.getAge());
+
+		//목록 조회
+		List<Member> memberList = em.createQuery("select m from Member m", Member.class).getResultList();
+		System.out.printf("members.size=%s\n",memberList.size());
+
+		//삭제
+		em.remove(member);
 	}
 }
