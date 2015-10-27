@@ -3,6 +3,7 @@
              version="2.1">
     <persistence-unit name="jpabook">
         <class>com.libjap.springboot.domain.Member</class>
+        <class>com.libjap.springboot.domain.Division</class>
         <properties>
             <!-- 필수 속성 -->
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver" />

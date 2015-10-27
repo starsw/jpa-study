@@ -2,6 +2,7 @@ package com.libjap.springboot;
 
 import com.libjap.springboot.domain.Customer;
 import com.libjap.springboot.domain.CustomerRepository;
+import com.libjap.springboot.domain.Division;
 import com.libjap.springboot.domain.Member;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -76,7 +77,8 @@ public class Application implements CommandLineRunner {
 
 		try {
 			tx.begin();
-			logic(em);
+			logicMemberCrud(em);
+			logicDivisionCrud(em);
 			tx.commit();
 
 		} catch (Exception e) {
@@ -89,7 +91,7 @@ public class Application implements CommandLineRunner {
 
 	}
 
-	public static void logic(EntityManager em) {
+	public static void logicMemberCrud(EntityManager em) {
 
 		String id = "id";
 		Member member = new Member();
@@ -113,5 +115,30 @@ public class Application implements CommandLineRunner {
 
 		//삭제
 		em.remove(member);
+	}
+
+	public static void logicDivisionCrud(EntityManager em) {
+
+		Integer id = 1;
+		Division division = new Division();
+		division.setId(1);
+		division.setPartname("발리팀");
+
+		//등록
+		em.persist(division);
+
+		//수정
+		division.setPartname("발리팀멋져");
+
+		//한건 조회
+		Division findDivision = em.find(Division.class, id);
+		System.out.printf("findDivision id=%s, partname=%s\n",findDivision.getId(), findDivision.getPartname());
+
+		//목록 조회
+		List<Division> divisionList = em.createQuery("select d from Division d", Division.class).getResultList();
+		System.out.printf("divisionList.size=%s\n",divisionList.size());
+
+		//삭제
+		em.remove(division);
 	}
 }
