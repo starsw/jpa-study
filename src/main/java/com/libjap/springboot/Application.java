@@ -1,13 +1,11 @@
 package com.libjap.springboot;
 
-import com.libjap.springboot.domain.Customer;
-import com.libjap.springboot.domain.CustomerRepository;
-import com.libjap.springboot.domain.Division;
-import com.libjap.springboot.domain.Member;
+import com.libjap.springboot.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -28,42 +26,52 @@ public class Application implements CommandLineRunner {
 	@Autowired
 	CustomerRepository repository;
 
+    @Autowired
+    MemberRepository memberRepository;
+
+    @Autowired
+    TeamRepository teamRepository;
+
 	public static void main(String[] args){
 		SpringApplication.run(Application.class,args);
 		System.out.print("Spring Boot Application Start !");
 	}
 	@Override
 	public void run(String... strings) throws Exception {
-		// save a couple of customers
-		repository.save(new Customer("Hong", "Sangwoo"));
-		repository.save(new Customer("Hong", "Gildong"));
-		repository.save(new Customer("Kim", "Bauer"));
-		repository.save(new Customer("David", "Palmer"));
-		repository.save(new Customer("Michelle", "Dessler"));
-
-		// fetch all customers
-		System.out.println("Customers found with findAll():");
-		System.out.println("-------------------------------");
-		for (Customer customer : repository.findAll()) {
-			System.out.println(customer);
-		}
-		System.out.println();
-
-		// fetch an individual customer by ID
-		Customer customer = repository.findOne(2L);
-		System.out.println("Customer found with findOne(1L):");
-		System.out.println("--------------------------------");
-		System.out.println(customer);
-		System.out.println();
-
-		// fetch customers by last name
-		System.out.println("Customer found with findByLastName('Bauer'):");
-		System.out.println("--------------------------------------------");
-		for (Customer bauer : repository.findByLastName("Bauer")) {
-			System.out.println(bauer);
-		}
+//      example1();
 		homework1();
 	}
+
+    public void example1(){
+        // save a couple of customers
+        repository.save(new Customer("Hong", "Sangwoo"));
+        repository.save(new Customer("Hong", "Gildong"));
+        repository.save(new Customer("Kim", "Bauer"));
+        repository.save(new Customer("David", "Palmer"));
+        repository.save(new Customer("Michelle", "Dessler"));
+
+        // fetch all customers
+        System.out.println("Customers found with findAll():");
+        System.out.println("-------------------------------");
+        for (Customer customer : repository.findAll()) {
+            System.out.println(customer);
+        }
+        System.out.println();
+
+        // fetch an individual customer by ID
+        Customer customer = repository.findOne(2L);
+        System.out.println("Customer found with findOne(1L):");
+        System.out.println("--------------------------------");
+        System.out.println(customer);
+        System.out.println();
+
+        // fetch customers by last name
+        System.out.println("Customer found with findByLastName('Bauer'):");
+        System.out.println("--------------------------------------------");
+        for (Customer bauer : repository.findByLastName("Bauer")) {
+            System.out.println(bauer);
+        }
+    }
 
 	public void homework1() {
 		//[엔티티 매니저 팩토리] - 생성
@@ -77,12 +85,13 @@ public class Application implements CommandLineRunner {
 
 		try {
 			tx.begin();
-			logicMemberCrud(em);
-			logicDivisionCrud(em);
+//			logicMemberCrud(em);
+//			logicDivisionCrud(em);
+            logicMemberSingleCreate(em);
 			tx.commit();
 
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			System.out.print(e.getMessage());
 			tx.rollback();
 		} finally {
 			em.close();
@@ -92,10 +101,9 @@ public class Application implements CommandLineRunner {
 	}
 
 	public static void logicMemberCrud(EntityManager em) {
-
-		String id = "id";
+        int id = 1;
 		Member member = new Member();
-		member.setId(id);
+        member.setId(id);
 		member.setUsername("지한");
 		member.setAge(2);
 
@@ -119,26 +127,44 @@ public class Application implements CommandLineRunner {
 
 	public static void logicDivisionCrud(EntityManager em) {
 
-		Integer id = 1;
-		Division division = new Division();
-		division.setId(1);
-		division.setPartname("발리팀");
+		int id = 1;
+		Team team = new Team();
+		team.setId(id);
+		team.setName("발리팀");
 
 		//등록
-		em.persist(division);
+		em.persist(team);
 
 		//수정
-		division.setPartname("발리팀멋져");
+		team.setName("발리팀멋져");
 
 		//한건 조회
-		Division findDivision = em.find(Division.class, id);
-		System.out.printf("findDivision id=%s, partname=%s\n",findDivision.getId(), findDivision.getPartname());
+		Team findTeam = em.find(Team.class, id);
+		System.out.printf("findTeam id=%s, partname=%s\n", findTeam.getId(), findTeam.getName());
 
 		//목록 조회
-		List<Division> divisionList = em.createQuery("select d from Division d", Division.class).getResultList();
-		System.out.printf("divisionList.size=%s\n",divisionList.size());
+		List<Team> teamList = em.createQuery("select t from Team t", Team.class).getResultList();
+		System.out.printf("teamList.size=%s\n", teamList.size());
 
 		//삭제
-		em.remove(division);
+		em.remove(team);
 	}
+
+    public void logicMemberSingleCreate(EntityManager em) {
+
+
+        Team team = new Team();
+        team.setId(2);
+        team.setName("bali");
+
+        Member member = new Member();
+        member.setId(2);
+        member.setUsername("지한");
+        member.setAge(2);
+        member.setTeam(team);
+
+        //등록
+
+        em.persist(member);
+    }
 }

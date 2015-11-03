@@ -3,20 +3,25 @@ package com.libjap.springboot.domain;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.lang.model.element.Name;
 import javax.persistence.*;
 
 @Entity
-@Table(name="MEMBER")
+@Table(name = "MEMBER")
 @Getter
 @Setter
 public class Member {
-	@Id
-	@Column(name="ID")
-	private String id;
+    @Id
+    @Column(name = "ID")
+    private Integer id;
 
-	@Column(name="NAME")
-	private String username;
+    @Column(name = "NAME")
+    private String username;
 
-	//맵핑 정보가 없는 필드
-	private Integer age;
+    @Column(name = "AGE")
+    private Integer age;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "TEAM_ID")
+    private Team team;
 }
