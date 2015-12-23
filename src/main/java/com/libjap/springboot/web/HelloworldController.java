@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class HelloworldController {
 	@RequestMapping("/hello")
 	public String helloworld(){
-		return "hello";
+		return "helloworld!!  사랑해보람아!!";
 	}
 
 }
