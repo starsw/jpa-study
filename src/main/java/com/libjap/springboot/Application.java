@@ -6,25 +6,34 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
  * Created by coupang on 15. 10. 13..
  */
-@Configuration
-@EnableAutoConfiguration
-@ComponentScan
-public class Application implements CommandLineRunner {
+//@Configuration
+//@EnableAutoConfiguration
+//@ComponentScan
+@SpringBootApplication
+public class Application extends SpringBootServletInitializer {
 
 	@Autowired
 	CustomerRepository repository;
 
-	public static void main(String[] args){
-		SpringApplication.run(Application.class,args);
-		System.out.print("Spring Boot Application Start !");
-	}
 	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+		return application.sources(Application.class);
+	}
+
+//	public static void main(String[] args){
+//		SpringApplication.run(Application.class,args);
+//		System.out.print("Spring Boot Application Start !");
+//	}
+//	@Override
 	public void run(String... strings) throws Exception {
 		// save a couple of customers
 		repository.save(new Customer("Hong", "Sangwoo"));
