@@ -29,10 +29,11 @@ public class Application extends SpringBootServletInitializer {
 		return application.sources(Application.class);
 	}
 
-//	public static void main(String[] args){
-//		SpringApplication.run(Application.class,args);
-//		System.out.print("Spring Boot Application Start !");
-//	}
+	public static void main(String[] args) throws Exception {
+		SpringApplication.run(Application.class, args);
+		System.out.print("Spring Boot Application Start !");
+	}
+
 //	@Override
 	public void run(String... strings) throws Exception {
 		// save a couple of customers
