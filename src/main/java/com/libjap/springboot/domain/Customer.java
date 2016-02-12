@@ -1,9 +1,6 @@
 package com.libjap.springboot.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Created by Q u i c K
@@ -11,12 +8,16 @@ import javax.persistence.Id;
  * Description :
  */
 @Entity
+@Table(name = "customer")
 public class Customer {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id")
 	private long id;
+	@Column(name = "firstName")
 	private String firstName;
+	@Column(name = "lastName")
 	private String lastName;
 
 	protected Customer() {
